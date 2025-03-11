@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Products Showcase</title>
+    <style>
+        :root[data-theme="light"] {
+            --bg-color: #f5f5f5;
+            --header-bg: #fff;
+            --footer-bg: #fff;
+            --card-bg: #fff;
+            --text-color: #333;
+            --text-secondary: #666;
+            --shadow-color: rgba(0,0,0,0.1);
+            --modal-overlay: rgba(0,0,0,0.5);
+            --logo-color: #007BFF;
+        }
+
+        :root[data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --header-bg: #2d2d2d;
+            --footer-bg: #2d2d2d;
+            --card-bg: #2d2d2d;
+            --text-color: #fff;
+            --text-secondary: #ccc;
+            --shadow-color: rgba(0,0,0,0.3);
+            --modal-overlay: rgba(0,0,0,0.8);
+            --logo-color: #fff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            transition: background-color 0.3s ease;
+            padding-top: 80px;
+            padding-bottom: 60px;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .fixed-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--header-bg);
+            box-shadow: 0 2px 5px var(--shadow-color);
+            z-index: 100;
+            transition: background-color 0.3s ease;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.1);
+        }
+
+        .header-text {
+            flex-grow: 1;
+        }
+
+        h1 {
+            color: var(--text-color);
+            margin-bottom: 5px;
+            font-size: 1.8em;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1em;
+        }
+
+        /* Rest of your existing styles remain the same */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--text-secondary);
+            color: var(--text-color);
+            border-radius: 20px;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.05);
+        }
+
+        /* Keep all your existing styles for products-grid, cards, modal, etc. */
+        
+        @media (max-width: 768px) {
+            body {
+                padding-top: 70px;
+            }
+
+            .header-content {
+                padding: 8px 15px;
+                gap: 15px;
+            }
+
+            .logo {
+                width: 32px;
+                height: 32px;
+            }
+
+            h1 {
+                font-size: 1.4em;
+            }
+
+            .subtitle {
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="fixed-header">
+        <div class="header-content">
+            <div class="logo-container">
+                <img src="logo.svg" alt="Digital Products Logo" class="logo">
+            </div>
+            <div class="header-text">
+                <h1>Digital Products Showcase</h1>
+                <p class="subtitle">Premium Source Code for Your Next Project</p>
+            </div>
+        </div>
+    </header>
+
+    <button class="theme-toggle" onclick="toggleTheme()">🌓 Toggle Theme</button>
+    
+    <div class="container">
+        <div class="products-grid" id="productsContainer">
+            <!-- Products will be loaded here dynamically -->
+        </div>
+    </div>
+
+    <footer class="fixed-footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#">About Us</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Contact</a>
+            </div>
+            <div class="copyright">
+                © 2024 Digital Products Showcase. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal Template -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <div class="modal-content" id="modalContent">
+                <!-- Modal content will be loaded dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme toggling functionality
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
+        // Modal functionality
+        function openModal(product) {
+            const modalContent = document.getElementById('modalContent');
+            const discountedPrice = calculateDiscountedPrice(product.price, product.diskon);
+            
+            modalContent.innerHTML = `
+                <div class="modal-image">
+                    <iframe src="${product.link}" title="${product.name}"></iframe>
+                </div>
+                <h2 class="modal-title">${product.name}</h2>
+                <div class="modal-price-info">
+                    <span class="original-price">Rp ${parseInt(product.price).toLocaleString()}</span>
+                    <span class="discounted-price">Rp ${discountedPrice.toLocaleString()}</span>
+                    <span class="discount-badge">${product.diskon} OFF</span>
+                </div>
+                <p class="modal-description">${product.deskripsi}</p>
+                <div class="button-group">
+                    <a href="${product.link}" target="_blank" class="btn btn-demo">View Demo</a>
+                    <a href="https://wa.me/your-number?text=I'm%20interested%20in%20${encodeURIComponent(product.name)}" target="_blank" class="btn btn-buy">Buy Now</a>
+                </div>
+            `;
+            
+            document.getElementById('modalOverlay').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('modalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Calculate discounted price
+        function calculateDiscountedPrice(price, discount) {
+            const discountPercent = parseInt(discount);
+            const originalPrice = parseInt(price);
+            return originalPrice - (originalPrice * (discountPercent / 100));
+        }
+
+        // Load products from JSON
+        async function loadProducts() {
+            try {
+                const response = await fetch('products.json');
+                const data = await response.json();
+                const productsContainer = document.getElementById('productsContainer');
+                
+                data.products.forEach(product => {
+                    const discountedPrice = calculateDiscountedPrice(product.price, product.diskon);
+                    const productCard = `
+                        <div class="product-card" onclick="openModal(${JSON.stringify(product)})">
+                            <div class="product-image">
+                                <iframe src="${product.link}" title="${product.name}"></iframe>
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-title">${product.name}</h3>
+                                <div class="price-info">
+                                    <span class="original-price">Rp ${parseInt(product.price).toLocaleString()}</span>
+                                    <span class="discounted-price">Rp ${discountedPrice.toLocaleString()}</span>
+                                    <span class="discount-badge">${product.diskon} OFF</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    productsContainer.innerHTML += productCard;
+                });
+            } catch (error) {
+                console.error('Error loading products:', error);
+            }
+        }
+
+        // Load products when the page loads
+        window.addEventListener('load', loadProducts);
+    </script>
+</body>
+</html>
