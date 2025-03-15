@@ -1,0 +1,14 @@
+SETUP PANDUAN API
+
+1. BUAT SUBDOMAIN : api & playgame
+2. Atur koneksi database di setiap file koneksi.php cek semua folder dan file
+3. Atur Config nexusggr di file : 
+	1. module-admin.php di folder admin
+	2. main.php di folder api/v1 dan api/prosedur
+4. Atur Cronsjob File :
+	1. api/prosedur/delete-history.php setiap 1 hari
+	2. api/prosedur/gethistory.php setiap 1 menit / pakai module AppJs tiap 3 detik sekali
+	3. api/prosedur/gethistorylive.php setiap 1 menit / pakai module AppJs tiap 3 detik sekali
+5. Upload Database ke phpmyadmin
+6. Pindahkan isi file di folder api ke subdomain api dan isi file playgame ke subdomain playgame
+7. Buat akun dan ubah level akun menjadi admin dan BO API siap pakai.
